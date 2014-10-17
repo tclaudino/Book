@@ -17,13 +17,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 import br.com.caelum.cadastro.adapter.ListaAlunoAdapter;
 import br.com.caelum.cadastro.dao.AlunoDAO;
 import br.com.caelum.cadastro.modelo.Aluno;
-import br.com.caelum.cadastro.support.WebClient;
 import br.com.caelum.task.EnviaContatosTask;
 
 public class ListaAlunosActivity extends Activity {
@@ -53,9 +50,6 @@ public class ListaAlunosActivity extends Activity {
 				
 				startActivity(edicao);
 				
-//				Toast.makeText(ListaAlunosActivity.this, 
-//						"Posição selecionada: "+arg2, Toast.LENGTH_LONG).show();
-
 			}
 		});
 		
@@ -66,10 +60,6 @@ public class ListaAlunosActivity extends Activity {
 					int posicao, long arg3) {
 
 				alunoSelecionado = (Aluno) adapter.getItemAtPosition(posicao);
-//				Toast.makeText(ListaAlunosActivity.this, "Clique longo "
-//						+ aluno, Toast.LENGTH_LONG).show();
-				
-				
 				
 				return false;
 			}
@@ -181,9 +171,6 @@ public class ListaAlunosActivity extends Activity {
 	private void carregarLista(){
 		AlunoDAO dao = new AlunoDAO(this);
 		alunos = dao.getList();
-		
-//		ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this, 
-//				android.R.layout.simple_list_item_1, alunos);
 		
 		ListaAlunoAdapter adapter = new ListaAlunoAdapter(this, alunos);
 		

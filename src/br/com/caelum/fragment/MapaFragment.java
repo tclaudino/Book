@@ -1,6 +1,5 @@
 package br.com.caelum.fragment;
 
-import java.io.IOException;
 import java.util.List;
 
 import br.com.caelum.cadastro.dao.AlunoDAO;
@@ -15,49 +14,48 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapaFragment extends SupportMapFragment {
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		try {
+
+		Localizador coderUtil = new Localizador(getActivity());
+		LatLng local = coderUtil
+				.getCoordenada("Rua Vergueiro 3185 Vila Mariana");
+		
+		MarkerOptions marcador = new MarkerOptions().title("Caelum")
+				.snippet("Ensino e Inovação").position(local);
+		getMap().addMarker(marcador);
+		
+		centralizarNo(local);
+
+		AlunoDAO dao = new AlunoDAO(getActivity());
+		List<Aluno> alunos = dao.getList();
+		dao.close();
+		
+		for (Aluno aluno : alunos) {
 			Localizador localizador = new Localizador(getActivity());
-			LatLng local = localizador.getCoordenada("Rua Vergueiro 3185 Vila Mariana");
-			MarkerOptions marcador = new MarkerOptions().title("Caelum")
-					.snippet("Ensino e Inovação")
-					.position(local);
-			getMap().addMarker(marcador);
+			LatLng coordenadas = localizador.getCoordenada(aluno.getEndereco());
 			
-			AlunoDAO dao = new AlunoDAO(getActivity());
-			List<Aluno> alunos = dao.getList();
-			
-			for (Aluno aluno : alunos) {
+			if ( coordenadas != null ) {
+				MarkerOptions marcadorAluno = new MarkerOptions()
+				.title(aluno.getNome()).snippet(aluno.getEndereco())
+				.position(coordenadas);
 				
-				LatLng localAluno = localizador.getCoordenada(aluno.getEndereco());
-				
-				MarkerOptions marcadorAluno = new MarkerOptions().title(aluno.getNome())
-						.snippet(aluno.getEndereco())
-						.position(localAluno);
 				getMap().addMarker(marcadorAluno);
 				
 			}
-			
-			this.centralizarNo(local);
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+
 	}
 
-	private void centralizarNo(LatLng local) {
-		
+	public void centralizarNo(LatLng local) {
+
 		GoogleMap mapa = getMap();
 		CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(local, 10);
-		
+
 		mapa.moveCamera(camera);
-		
+
 	}
-	
-	
 
 }
